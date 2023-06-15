@@ -4,12 +4,14 @@ local toyState
 local errorMessage
 local files
 local toyIndex = 4
+local showFiles = false
 
 local function loadToy()
 	local filePath = "shaders/" .. files[toyIndex]
 	local status, result = pcall(function()
 		return util.newShader(filePath)
 	end)
+	love.window.setTitle(files[toyIndex])
 	if status then
 		errorMessage = nil
 		toyState.shader = result
@@ -53,6 +55,9 @@ function love.draw()
 		love.graphics.setNewFont(16)
 		love.graphics.printf(errorMessage, 10, 10, love.graphics.getWidth() - 20)
 	end
+	if showFiles then
+		util.renderMenu(files, toyIndex, 0, 0, 200, love.graphics.getHeight())
+	end
 end
 
 function love.resize(w, h)
@@ -76,6 +81,9 @@ function love.keypressed(key)
 		toyState.time = 0
 		toyState.frame = 0
 		loadToy()
+	end
+	if key == "/" then
+		showFiles = not showFiles
 	end
 end
 

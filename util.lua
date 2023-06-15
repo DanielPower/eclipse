@@ -28,4 +28,19 @@ function util.renderShader(state)
 	end
 end
 
+function util.renderMenu(files, currentIndex, x, y, width, height)
+	love.graphics.setColor(0, 0, 0, 0.5)
+	love.graphics.rectangle("fill", x, y, width, height)
+	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.setNewFont(14)
+	for i, file in ipairs(files) do
+		if i == currentIndex then
+			love.graphics.setColor(0.3, 0.3, 0.3, 1)
+			love.graphics.rectangle("fill", 0, (i - 1) * 20, width, 20)
+			love.graphics.setColor(1, 1, 1, 1)
+		end
+		love.graphics.print(file, 5, y + 3 + (i - 1) * 20)
+	end
+end
+
 return util
