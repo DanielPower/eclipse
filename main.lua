@@ -11,7 +11,6 @@ local function loadToy()
 	local status, result = pcall(function()
 		return util.newShader(filePath)
 	end)
-	love.window.setTitle(files[toyIndex])
 	if status then
 		errorMessage = nil
 		toyState.shader = result
@@ -36,6 +35,7 @@ function love.load()
 end
 
 function love.update(dt)
+	love.window.setTitle(files[toyIndex] .. " " .. string.format("%.2f", 1 / dt) .. "fps")
 	if toyState.shader then
 		toyState.time = toyState.time + dt
 		toyState.frame = toyState.frame + 1
