@@ -1,7 +1,11 @@
 local util = {}
 
-function util.newToy(file, initialWidth, initialHeight, initialTime)
-	local shader = love.graphics.newShader([[
+function util.newShader(file)
+	local environment = {}
+	-- Put a loop here to pcall newShader, parsing the error and adding uniform values
+	-- until it succeeds. Return the uniform value names as environment so they can be
+	-- included in state and appropriate `send` calls can be made
+	return love.graphics.newShader([[
 #pragma language glsl3
 uniform float iTime;
 uniform vec2 iResolution;
@@ -11,32 +15,17 @@ vec4 effect(vec4 fragColor, Image tex, vec2 textureCoords, vec2 screenCoords) {
   return fragColor;
 }
 ]])
-	local toy = {}
-	toy.modified = love.filesystem.getInfo(file).modtime
-	local time = initialTime
-	local width = initialWidth
-	local height = initialHeight
-	shader:send("iTime", time)
-	shader:send("iResolution", { width, height })
+end
 
-	function toy.update(newTime)
-		time = newTime
-		shader:send("iTime", time)
-	end
-
-	function toy.resize(w, h)
-		width = w
-		height = h
-		shader:send("iResolution", { width, height })
-	end
-
-	function toy.draw()
-		love.graphics.setShader(shader)
-		love.graphics.rectangle("fill", 0, 0, width, height)
+function util.renderShader(state)
+	state.shader:send("iTime", state.time)
+	state.shader:send("iResolution", state.size)
+	if state.shader then
+		love.graphics.setShader(state.shader)
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 		love.graphics.setShader()
 	end
-
-	return toy
 end
 
 return util
