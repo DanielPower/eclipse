@@ -3,7 +3,7 @@ local util = require("util")
 local toyState
 local errorMessage
 local files
-local toyIndex = 4
+local toyIndex = 1
 local showFiles = false
 
 local function loadToy()
